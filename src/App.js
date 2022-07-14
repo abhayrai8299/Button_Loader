@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import "./App.css";
 import { Circles } from "react-loader-spinner";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
@@ -7,11 +7,12 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { Modal } from "react-bootstrap";
 import BookData from "./Data.json";
+import axios from "axios";
 
 function App() {
+ const [product,setProducts]=useState("")
   const [show, setShow] = useState(false);
   const [showpass, setShowPass] = useState(false);
- console.log(BookData);
   const [item, setitem] = useState("");
   const [pass, setpass] = useState("");
   const [disable, setDisable] = useState(false);
@@ -59,11 +60,21 @@ function App() {
 
   const handleSearch=(e)=>{
     setsearch(e.target.value)
-    const filter=BookData.filter((value)=>{
+    const filter=product.filter((value)=>{
       return value.title.includes(search);
     })
     setFilterData(filter)
   }
+  const fetchProducts=async()=>{
+    const response=await axios
+    .get("https://fakestoreapi.com/products")
+    .catch((e)=>{console.log(e)});
+    setProducts(response.data)
+}
+useEffect(()=>{
+  fetchProducts();
+  },[])
+console.log("saaass",product);
   return (
     <div className="App">
       {active === false ? (
